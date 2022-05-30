@@ -9,6 +9,8 @@ namespace DiskCleaner {
             return text;
         }
 
+        private Dictionary<string, string> templateVars = new Dictionary<string, string>();
+
         protected void Core_ParseTheTemplate() {
             if (templateItems != null || templateText == null) { return; }
 
@@ -23,7 +25,8 @@ namespace DiskCleaner {
                 }
             }
 
-            templateItems = TemplateItem.processLines(lines);
+            templateVars.Clear();
+            templateItems = TemplateItem.processLines(lines, templateVars);
 
             if (Debugger.debugLevelThreshold > 1) {
                 StringBuilder report = new StringBuilder();

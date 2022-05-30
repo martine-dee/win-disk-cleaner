@@ -150,9 +150,8 @@ namespace DiskCleaner {
         private static readonly CultureInfo ci = new CultureInfo("en-US");
 
         // Processes lines from a deletion template
-        public static List<TemplateItem> processLines(List<string> lines) {
+        public static List<TemplateItem> processLines(List<string> lines, Dictionary<string, string> vars) {
             List<TemplateItem> templateItems = new List<TemplateItem>();
-            Dictionary<string, string> vars = new Dictionary<string, string>();
 
             int pos = 0;
             while (pos < lines.Count) {
