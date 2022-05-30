@@ -13,6 +13,18 @@ namespace DiskCleaner {
             UI_InitializeComponent();
         }
 
+        protected override void OnResize(EventArgs eventArgs) {
+            base.OnResize(eventArgs);
+            this.rtbDebug.Width = this.Width - 160;
+            if (targetTable != null)
+            {
+                this.targetTable.Visible = false;
+                this.targetTable.Width = this.Width - 160;
+                this.targetTable.Height = this.Height - 220;
+                this.targetTable.Visible = true;
+            }
+        }
+
         override protected void OnShown(EventArgs eventArgs) {
             base.OnShown(eventArgs);
 

@@ -158,6 +158,7 @@ namespace DiskCleaner
             // 
             // seekerModeButton
             // 
+            this.seekerModeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.seekerModeButton.Location = new System.Drawing.Point(741, 594);
             this.seekerModeButton.Name = "seekerModeButton";
             this.seekerModeButton.Size = new System.Drawing.Size(84, 54);
