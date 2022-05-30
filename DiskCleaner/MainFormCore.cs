@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace DiskCleaner {
@@ -41,7 +42,27 @@ namespace DiskCleaner {
             // Build the dir list
             HashSet<string> dirSet = new HashSet<string>();
             Stack<string> dirs = new Stack<string>();
-            dirs.Push("C:\\");
+
+            // Process $_disks
+            if(templateVars.ContainsKey("_disks"))
+            {
+                string disks = templateVars["_disks"];
+                List<string> disksArr = disks.Split(',').Select(p => p.Trim()).ToList();
+                foreach (string disk in disksArr)
+                {
+                    if (disk.Length == 1 && char.IsLetter(disk[0])) {
+                        dirs.Push(disk.ToUpper() + ":\\"); // The hard-coded default
+                    }
+                    else
+                    {
+                        Debugger.Print("Strange $_disk letter '{0}'", disk);
+                    }
+                }
+            }
+            else
+            {
+                dirs.Push("C:\\"); // The hard-coded default
+            }
 
             while(dirs.Count > 0) {
                 string dir = dirs.Pop();

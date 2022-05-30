@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace DiskCleaner {
@@ -25,6 +26,23 @@ namespace DiskCleaner {
         // Inferred data (through the template compilation via .Compile()
         protected List<TargetFile> files;
         protected List<TargetDirectory> directories;
+
+        private static Dictionary<string, List<string>> disksCompiled = new Dictionary<String, List<String>>();
+
+        private static List<string> getDisks(string _disks)
+        {
+            if (!disksCompiled.ContainsKey(_disks))
+            {
+                string[] newListBase = _disks.Split(',');
+                List<string> newList = new List<string>();
+                foreach (string newItem in newListBase)
+                {
+                    newList.Add(newItem.Trim());
+                }
+                disksCompiled.Add(_disks, newList);
+            }
+            return disksCompiled[_disks];
+        }
 
         // The C-Tor
         public TemplateItem(string sourceTemplateLine, string path, Dictionary<string, string> options) {
@@ -180,6 +198,12 @@ namespace DiskCleaner {
                         {
                             string value = line.Substring(equalsPos + 1).Trim();
                             vars.Add(varname, value);
+
+                            // Cache known $_disks
+                            if(varname.Equals("_disks"))
+                            {
+                                TemplateItem.getDisks(vars["_disks"]);
+                            }
                         }
                     }
                     else
@@ -213,9 +237,13 @@ namespace DiskCleaner {
                 }
 
                 if (line.StartsWith("location:", true, ci)) {
-                    TemplateItem newItem = processALocation(line, options);
-                    if (newItem != null && newItem.hasSize()) {
-                        templateItems.Add(newItem);
+                    List<TemplateItem> newItems = processALocation(line, options, vars);
+                    foreach (TemplateItem newItem in newItems)
+                    {
+                        if (newItem != null && newItem.hasSize())
+                        {
+                            templateItems.Add(newItem);
+                        }
                     }
                 }
                 else if (line.StartsWith("search:", true, ci)) {
@@ -229,7 +257,7 @@ namespace DiskCleaner {
                         continue;
                     }
 
-                    List<TemplateItem> items = TemplateItem.processASearch(line, options);
+                    List<TemplateItem> items = TemplateItem.processASearch(line, options, vars);
                     if (items != null &&  items.Count > 0) {
                         foreach(TemplateItem item in items) {
                             if (item.hasSize()) {
@@ -286,17 +314,73 @@ namespace DiskCleaner {
             return options;
         }
 
+        public static List<string> ExpandLocationSegments(string startString, string[] items, int pos, Dictionary<string, string> vars)
+        {
+            List<string> locations = new List<string>();
+            
+            StringBuilder sb = new StringBuilder();
+            sb.Append(startString);
+
+            while (pos < items.Length)
+            {
+                string pathItem = items[pos];
+                if (pos == items.Length - 1) {
+                    sb.Append(pathItem);
+                    break;
+                }
+                string varItem = items[pos + 1];
+
+                sb.Append(pathItem);
+
+                if (varItem.Equals("_disks"))
+                {
+                    List<string> disks = TemplateItem.getDisks(vars["_disks"]);
+                    foreach (string disk in disks) {
+                        locations.AddRange(TemplateItem.ExpandLocationSegments(sb.ToString() + disk, items, pos + 2, vars));
+                    }
+                    return locations;
+                }
+                else if (vars.ContainsKey(varItem))
+                {
+                    sb.Append(vars[varItem]);
+                }
+
+                pos += 2;
+            }
+
+            locations.Add(sb.ToString());
+            return locations;
+        }
+
+        public static string[] ExpandVars(string location, Dictionary<string, string> vars)
+        {
+            if(location.Contains("`"))
+            {
+                string[] items = location.Split('`');
+                string[] locations = TemplateItem.ExpandLocationSegments("", items, 0, vars).ToArray();
+                return locations;
+            }
+
+            return new string[] { location };
+        }
+
         // Extracts path from the given template line. Beware, it is important
         // to obtain paths through this method, as it is supposed to handle
         // all parameters that could be present in the template.
-        public static string ExtractLocation(String line, Regex regex) {
+        public static string[] ExtractLocation(String line, Regex regex, Dictionary<string, string> vars) {
             Match matches = regex.Match(line);
             if (matches.Groups.Count == 2) {
                 string location = matches.Groups[1].Value;
+                List<string> locationsList = new List<string>();
                 if (location != null) {
-                    location = Environment.ExpandEnvironmentVariables(location);
+                    string[] locations = TemplateItem.ExpandVars(location, vars);
+                    foreach(string localLocation in locations)
+                    {
+                        string localLocationFinal = Environment.ExpandEnvironmentVariables(localLocation);
+                        locationsList.Add(localLocationFinal);
+                    }
                 }
-                return location;
+                return locationsList.ToArray();
             }
             return null;
         }
@@ -333,27 +417,38 @@ namespace DiskCleaner {
         }
 
         // Proceses a Search template
-        private static List<TemplateItem> processASearch(string line, Dictionary<string, string> options) {
-            string searchLocation = ExtractLocation(line, parseSearch);
-            TemplateSearch ts = new TemplateSearch(line, searchLocation, options);
-            List<TemplateItem> list = ts.GetTemplateLocations();
+        private static List<TemplateItem> processASearch(string line, Dictionary<string, string> options, Dictionary<string, string> vars) {
+            string[] searchLocations = ExtractLocation(line, parseSearch, vars);
+            List<TemplateItem> list = new List<TemplateItem>();
+            foreach (string searchLocation in searchLocations) {
+                TemplateSearch ts = new TemplateSearch(line, searchLocation, options);
+                list.AddRange(ts.GetTemplateLocations());
+            }
             return list;
         }
 
         // Processes a Location template
-        private static TemplateItem processALocation(string line, Dictionary<string, string> options) {
-            TemplateItem templateItem = null;
-            string location = ExtractLocation(line, parseLocation);
-            if (location != null) {
-                if (File.Exists(location)) {
-                    templateItem = new TemplateLocation(line, location, TemplateLocation.location_types.FILE, options);
+        private static List<TemplateItem> processALocation(string line, Dictionary<string, string> options, Dictionary<string, string> vars) {
+            List<TemplateItem> templateItems = new List<TemplateItem>();
+            
+            string[] locations = ExtractLocation(line, parseLocation, vars);
+            foreach (string location in locations)
+            {
+                if (location != null)
+                {
+                    if (File.Exists(location))
+                    {
+                        templateItems.Add(new TemplateLocation(line, location, TemplateLocation.location_types.FILE, options));
+                    }
+                    else if (Directory.Exists(location))
+                    {
+                        templateItems.Add(new TemplateLocation(line, location, TemplateLocation.location_types.DIRECTORY, options));
+                    }
+                    // else Doesn't exist
                 }
-                else if (Directory.Exists(location)) {
-                    templateItem = new TemplateLocation(line, location, TemplateLocation.location_types.DIRECTORY, options);
-                }
-                // else Doesn't exist
             }
-            return templateItem;
+
+            return templateItems;
         }
     }
 }
