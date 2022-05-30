@@ -47,6 +47,8 @@ Search: C:\Windows\servicing\LCU
 	regex: ".+"
 	checked: no
 
+Location: %userprofile%\EdgeBackup
+Location: %userprofile%\EdgeBackups
 Location: C:\Program Files (x86)\Microsoft\EdgeUpdate
 Location: C:\Program Files (x86)\Microsoft\Temp
 
@@ -58,7 +60,10 @@ Search: C:\temp
 # Software
 #
 
-# WinRAR
+# Unknown
+Location: %userprofile%\AppData\Local\unityhub-updater\pending
+
+# WinRAR -- TODO: not working from whatever reason
 Location: C:\$WinREAgent
 
 # Discord
@@ -105,6 +110,7 @@ Location: C:\ProgramData\Intel\Intel Extreme Tuning Utility\Logs
 	checked: no
 
 # NVIDIA
+Location: C:\NVIDIA
 Location: %userprofile%\AppData\Local\NVIDIA Corporation\NVIDIA GeForce Experience\CefCache\Cache
 Location: C:\ProgramData\NVIDIA Corporation\Downloader\latest
 Location: C:\ProgramData\NVIDIA Corporation\NV_Cache
@@ -124,6 +130,9 @@ Location: %userprofile%\AppData\Roaming\Twitch Studio\Logs
 
 # Gimp
 Location: C:\Program Files\GIMP 2\bin\.debug
+
+# Unity
+Location: %userprofile%\AppData\Roaming\Unity Hub\logs
 
 #
 # Launchers
@@ -164,6 +173,10 @@ Search: %userprofile%\AppData\Local\SecondLife\
 # HITMAN(tm) 1/2
 Location: %userprofile%\AppData\Local\IO Interactive\HITMAN\ShaderCache.bin
 Location: %userprofile%\AppData\Local\IO Interactive\HITMAN2\ShaderCache.bin
+
+# R6S
+Location: C:\Program Files (x86)\Steam\steamapps\common\Tom Clancy's Rainbow Six Siege\MatchReplay
+Location: D:\Steam\steamapps\common\Tom Clancy's Rainbow Six Siege\MatchReplay
 
 # Ubisoft
 Location: C:\Program Files (x86)\Ubisoft\Ubisoft Game Launcher\logs
