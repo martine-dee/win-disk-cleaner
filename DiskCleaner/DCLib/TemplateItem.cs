@@ -152,6 +152,7 @@ namespace DiskCleaner {
         // Processes lines from a deletion template
         public static List<TemplateItem> processLines(List<string> lines) {
             List<TemplateItem> templateItems = new List<TemplateItem>();
+            Dictionary<string, string> vars = new Dictionary<string, string>();
 
             int pos = 0;
             while (pos < lines.Count) {
@@ -162,6 +163,31 @@ namespace DiskCleaner {
                 // Process the line with its optionLines
                 if (line.StartsWith("#")) // A comment
                 {
+                    pos++;
+                    continue;
+                }
+
+                if(line.StartsWith("$")) // A var
+                {
+                    int equalsPos = line.IndexOf("=");
+                    if(equalsPos != -1)
+                    {
+                        string varname = line.Substring(1, equalsPos - 1).Trim();
+                        if(vars.ContainsKey(varname))
+                        {
+                            Debugger.Print("The varname '{0}' is already defined. Skipping. Line {1}: '{2}'", varname, pos, line);
+                        }
+                        else
+                        {
+                            string value = line.Substring(equalsPos + 1).Trim();
+                            vars.Add(varname, value);
+                        }
+                    }
+                    else
+                    {
+                        Debugger.Print("Found 'debug_threshold:' without the option 'level'. Please add the 'level: value' as an option in the next line.");
+                        continue;
+                    }
                     pos++;
                     continue;
                 }
