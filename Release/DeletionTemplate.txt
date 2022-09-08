@@ -1,17 +1,26 @@
+$steam = D:\Steam\steamapps\common\
+$_disks = C,D
+
 #
 # Windows / NA
 #
 Location: %userprofile%\AppData\Local\cache
+	checked: yes
 Location: %userprofile%\AppData\Local\CrashDumps
+	checked: yes
 Location: C:\Windows\SysWOW64\config\systemprofile\AppData\Local\CrashDumps
+	checked: yes
 Location: C:\Windows\System32\config\systemprofile\AppData\Local\CrashDumps
+	checked: yes
 Location: %userprofile%\AppData\Local\D3DSCache
 	checked: no
 Location: %userprofile%\AppData\Local\fontconfig\cache
+	checked: no
 Location: %userprofile%\AppData\Local\Temp
+	checked: yes
 Location: %userprofile%\AppData\LocalLow\Temp
+	checked: yes
 
-Location: %userprofile%\MicrosoftEdgeBackups
 Location: C:\Windows\Downloaded Program Files
 	checked: no
 	disabled: yes
@@ -19,12 +28,12 @@ Location: C:\Windows\LiveKernelReports
 	checked: no
 	disabled: yes
 Location: C:\Program Files\templ
-	checked: no
+	checked: yes
 
 Location: %userprofile%\.nuget
-	checked: no
+	checked: yes
 Location: %userprofile%\.oracle_jre_usage
-	checked: no
+	checked: yes
 
 Search: C:\Windows\WinSxS\
 	regex: "amd64_microsoft-windows-edgechromium_"
@@ -47,10 +56,16 @@ Search: C:\Windows\servicing\LCU
 	regex: ".+"
 	checked: no
 
+Location: %userprofile%\AppData\Local\Microsoft\Edge
+	checked: yes
 Location: %userprofile%\EdgeBackup
+	checked: yes
 Location: %userprofile%\EdgeBackups
+	checked: yes
 Location: C:\Program Files (x86)\Microsoft\EdgeUpdate
+	checked: yes
 Location: C:\Program Files (x86)\Microsoft\Temp
+	checked: yes
 
 Search: C:\temp
 	regex: ".+"
@@ -62,9 +77,11 @@ Search: C:\temp
 
 # Unknown
 Location: %userprofile%\AppData\Local\unityhub-updater\pending
+	checked: yes
 
 # WinRAR -- TODO: not working from whatever reason
 Location: C:\$WinREAgent
+	checked: yes
 
 # Discord
 Location: %userprofile%\AppData\Roaming\discord\Cache
@@ -74,15 +91,21 @@ Location: %userprofile%\AppData\Roaming\discord\Code Cache
 
 # Corsair
 Location: C:\ProgramData\Corsair\CUE\GameSdkEffects\
+	checked: yes
 Location: C:\ProgramData\Corsair\CUE4\GameSdkEffects\
+	checked: yes
 Location: C:\Program Files\Corsair\CORSAIR iCUE 4 Software\plugins
+	checked: yes
 Location: C:\Users\All Users\Corsair\CUE4\GameSdkEffects\
+	checked: yes
 
 # Seelseries
 Location: C:\ProgramData\SteelSeries\SteelSeries Engine 3\updates
+	checked: yes
 
 # Stream OBS
 Location: %userprofile%\AppData\Local\slobs-client-updater
+	checked: yes
 
 # Google
 Location: %userprofile%\AppData\Local\Google\Chrome\User Data\Default\Cache
@@ -92,15 +115,19 @@ Location: %userprofile%\AppData\Local\Google\Chrome\User Data\Default\Code Cache
 Location: %userprofile%\AppData\Local\Google\Chrome\User Data\Default\Service Worker\CacheStorage
 	checked: no
 Location: %userprofile%\AppData\Local\Google\CrashReports
-	checked: no
+	checked: yes
+
 # TODO
 # e.g. C:\Program Files (x86)\Google\Chrome\Application\93.0.4577.82\Installer
 # Search: C:\Program Files (x86)\Google\Chrome\Application\
 #	regex: "Installer"
 #	checked: no
 Location: C:\Program Files (x86)\Google\CrashReports
+	checked: yes
 Location: C:\Program Files (x86)\Google\Temp
+	checked: yes
 Location: C:\Program Files (x86)\Google\Update
+	checked: yes
 
 # Intel
 Search: C:\ProgramData\
@@ -113,10 +140,12 @@ Location: C:\ProgramData\Intel\Intel Extreme Tuning Utility\Logs
 Location: C:\NVIDIA
 Location: %userprofile%\AppData\Local\NVIDIA Corporation\NVIDIA GeForce Experience\CefCache\Cache
 Location: C:\ProgramData\NVIDIA Corporation\Downloader\latest
+	checked: yes
 Location: C:\ProgramData\NVIDIA Corporation\NV_Cache
 	checked: no
 Search: C:\ProgramData\NVIDIA Corporation\Downloader
 	regex: "[0-9a-f]{32}$"
+	checked: yes
 Location: %userprofile%\AppData\Local\NVIDIA\DXCache
 	checked: no
 Location: %userprofile%\AppData\Local\NVIDIA\GLCache
@@ -126,13 +155,15 @@ Location: %userprofile%\AppData\Roaming\NVIDIA\ComputeCache
 
 # Twitch Studio
 Location: %userprofile%\AppData\Roaming\Twitch Studio\Logs
-	checked: no
+	checked: yes
 
 # Gimp
 Location: C:\Program Files\GIMP 2\bin\.debug
+	checked: yes
 
 # Unity
 Location: %userprofile%\AppData\Roaming\Unity Hub\logs
+	checked: yes
 
 #
 # Launchers
@@ -140,13 +171,13 @@ Location: %userprofile%\AppData\Roaming\Unity Hub\logs
 
 # Steam
 Location: %userprofile%\AppData\Local\Steam\htmlcache
-	checked: no
+	checked: yes
 
 # Battle.net
 Location: %userprofile%\AppData\Local\Battle.net\BrowserCache\Cache
-	checked: no
+	checked: yes
 Location: %userprofile%\AppData\Local\Battle.net\BrowserCache\Code Cache
-	checked: no
+	checked: yes
 Location: %userprofile%\AppData\Local\Battle.net\Cache
 	checked: no
 
@@ -156,33 +187,40 @@ Location: %userprofile%\AppData\Local\Battle.net\Cache
 
 # CoD
 Location: C:\Program Files (x86)\Call of Duty Modern Warfare\xpak_cache
-	checked: no
+	checked: yes
 
 # Rockstar Games Social Club Installation
 Location: C:\Program Files\Rockstar Games\Launcher\Redistributables\SocialClub
-	checked: no
+	checked: yes
 
 # Second Life
 Location: %userprofile%\AppData\Roaming\SecondLife\downloads
+	checked: yes
 Location: %userprofile%\AppData\Local\SecondLife\cef_cache
+	checked: yes
 Location: %userprofile%\AppData\Local\SecondLife\objectcache
+	checked: yes
 Location: %userprofile%\AppData\Local\SecondLife\texturecache
+	checked: yes
 Search: %userprofile%\AppData\Local\SecondLife\
 	regex: "[0-9a-f]{32}$"
+	checked: no
 
 # HITMAN(tm) 1/2
 Location: %userprofile%\AppData\Local\IO Interactive\HITMAN\ShaderCache.bin
+	checked: no
 Location: %userprofile%\AppData\Local\IO Interactive\HITMAN2\ShaderCache.bin
+	checked: no
 
 # R6S
-Location: C:\Program Files (x86)\Steam\steamapps\common\Tom Clancy's Rainbow Six Siege\MatchReplay
-Location: D:\Steam\steamapps\common\Tom Clancy's Rainbow Six Siege\MatchReplay
+Location: `steam`Tom Clancy's Rainbow Six Siege\MatchReplay
+	checked: yes
 
 # Ubisoft
 Location: C:\Program Files (x86)\Ubisoft\Ubisoft Game Launcher\logs
-	checked: no
+	checked: yes
 Location: C:\Program Files (x86)\Ubisoft\Ubisoft Game Launcher\crashes
-	checked: no
+	checked: yes
 Location: C:\Program Files (x86)\Ubisoft\Ubisoft Game Launcher\cache\http2\Cache
 	checked: no
 Location: C:\Program Files (x86)\Ubisoft\Ubisoft Game Launcher\cache\http2\Code Cache
